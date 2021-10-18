@@ -1,4 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
-packstack --os-controller-host=controller --os-compute-host=compute1,compute2 --gen-answer-file /root/answers.txt
+VENV_PATH=/opt/kolla
+cd $VENV_PATH
+source $VENV_PATH/bin/activate
+
+kolla-ansible -i ./multinode bootstrap-servers
+kolla-ansible -i ./multinode prechecks
+kolla-ansible -i ./multinode deploy

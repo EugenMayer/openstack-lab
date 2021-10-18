@@ -13,7 +13,7 @@ cd $VENV_PATH
 python3 -m venv $VENV_PATH
 source $VENV_PATH/bin/activate
 
-# Install ansible
+######## Install ansible
 pip install -U pip
 echo "Installing Ansible"
 pip install 'ansible<5.0'
@@ -22,19 +22,14 @@ echo "Installing Kolla"
 # stable, yet wallaby only
 #pip install kolla-ansible
 
-# from source for xena compat
+######## from source for xena compat
 mkdir -p /opt/source
 git clone -b stable/xena https://github.com/openstack/kolla /opt/source/kolla
 git clone -b stable/xena https://github.com/openstack/kolla-ansible /opt/source/kolla-ansible
 pip install /opt/source/kolla
 pip install /opt/source/kolla-ansible
 
-
-sudo mkdir -p /etc/kolla
-sudo chown vagrant:vagrant /etc/kolla
-cp -r $VENV_PATH/share/kolla-ansible/etc_examples/kolla/* /etc/kolla
-cp $VENV_PATH/share/kolla-ansible/ansible/inventory/* .
-
+######## default ansible configuration for our deployment
 sudo mkdir -p /etc/ansible
 # Configure ansible
 sudo echo """[defaults]
@@ -43,6 +38,11 @@ pipelining=True
 forks=100
 """ > /etc/ansible/ansible.cfg
 
+######## default kolla configuration
+sudo mkdir -p /etc/kolla
+sudo chown vagrant:vagrant /etc/kolla
+cp -r $VENV_PATH/share/kolla-ansible/etc_examples/kolla/* /etc/kolla
+cp $VENV_PATH/share/kolla-ansible/ansible/inventory/* .
 sudo mkdir -p /etc/kolla/globals.d/
 
 # see https://docs.openstack.org/kolla-ansible/latest/admin/production-architecture-guide.html#network-configuration
@@ -66,11 +66,13 @@ enable_cinder_backend_nfs: "true"
 sudo chown vagrant:vagrant /etc/kolla -R
 sudo chown vagrant:vagrant /opt/kolla -R
 
-# our multinode setup
+###### our specific configuration (xena)
 cp /mnt/config/multinode /opt/kolla/multinode
 
-# test we can reach all nodes
+# make sure we pre-fill the known hosts
 ssh-keyscan frontend compute1 compute2 >> /home/vagrant/.ssh/known_hosts
+
+# test connectivity to hosts
 ansible -i multinode all -m ping
 
 # generate passwords

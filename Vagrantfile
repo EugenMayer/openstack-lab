@@ -38,7 +38,6 @@ Vagrant.configure("2") do |config|
 
       # openstack management network - must come first so the hostname is assigned to this network
       box.vm.network "private_network", ip: computeNodes[key]['ip_management'], hostname: true, virtualbox__intnet: true
-
       # VM network
       box.vm.network "private_network", ip: computeNodes[key]['ip_vm'], virtualbox__intnet: true
 
@@ -47,8 +46,9 @@ Vagrant.configure("2") do |config|
       box.vm.disk :disk, size: "20GB", name: "lvm-disk"
 
       box.vm.provider :virtualbox do |vb|
-        vb.memory = 2048
+        vb.memory = 3048
         vb.cpus = 2
+        # Enable nested virtualization, since we want to host VMs on compute
         vb.customize ["modifyvm", :id, "--nested-hw-virt", "on"]
       end
       
@@ -63,7 +63,7 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  # our controller nodes
+  # our controller nodes - we actually have only 1
   controllerNodes.keys.sort.each do |key|
     hostname = controllerNodes[key]['hostname']
     ip_vm = controllerNodes[key]['ip_vm']
@@ -71,8 +71,8 @@ Vagrant.configure("2") do |config|
 
     config.vm.define hostname do |box|
       box.vm.provider :virtualbox do |vb|
-        vb.memory = 3048
-        vb.cpus = 3
+        vb.memory = 10048
+        vb.cpus = 6
       end
       box.vm.host_name = hostname
 
@@ -104,7 +104,9 @@ Vagrant.configure("2") do |config|
     box.vm.network "private_network", ip: deploy['ip_management'], hostname: true, virtualbox__intnet: true
 
     config.vm.synced_folder "config/", "/mnt/config"
-    #deploy ssh private/public key before we install
+
+    # deploy ssh private/public key before we install
+    # This ensure we have root ssh access on all nodes (controller/compute)
     box.vm.provision "shell", inline: <<-SCRIPT
       sudo echo '#{private_key}' > /root/.ssh/id_rsa_cluster
       sudo echo '#{public_key}' > /root/.ssh/id_rsa_cluster.pub

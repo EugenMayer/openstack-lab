@@ -1,13 +1,14 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+deploy =  {'hostname' => 'deploy',  "ip_management" => "10.0.0.240"}
 controllerNodes = {
-  'compute1' => {'hostname' => 'controller', "ip_vm" => "172.30.0.2", "ip_manage" => "10.0.0.2"},
+  'compute1' => {'hostname' => 'controller', "ip_vm" => "172.30.0.2", "ip_management" => "10.0.0.2"},
 }
 
 computeNodes = {
-  'compute1' => {'hostname' => 'compute1', "ip_vm" => "172.30.0.3", "ip_manage" => "10.0.0.3"},
-  'compute2' => {'hostname' => 'compute2', "ip_vm" => "172.30.0.4", "ip_manage" => "10.0.0.4"}
+  'compute1' => {'hostname' => 'compute1', "ip_vm" => "172.30.0.3", "ip_management" => "10.0.0.3"},
+  'compute2' => {'hostname' => 'compute2', "ip_vm" => "172.30.0.4", "ip_management" => "10.0.0.4"}
 }
 
 Vagrant.configure("2") do |config|
@@ -28,14 +29,19 @@ Vagrant.configure("2") do |config|
   config.hostmanager.manage_guest = true
   config.hostmanager.ignore_private_ip = false
   config.hostmanager.include_offline = true
+
   # setup the compute nodes first
   computeNodes.keys.sort.each do |key|
     hostname = computeNodes[key]['hostname']
-    ip = computeNodes[key]['ip']
-
     config.vm.define hostname do |box|
-      box.vm.network "private_network", ip: ip, hostname: true, virtualbox__intnet: true
-         # VM network
+      box.vm.host_name = hostname
+
+      # openstack management network - must come first so the hostname is assigned to this network
+      box.vm.network "private_network", ip: computeNodes[key]['ip_management'], hostname: true, virtualbox__intnet: true
+
+      # VM network
+      box.vm.network "private_network", ip: computeNodes[key]['ip_vm'], virtualbox__intnet: true
+
 
       # we need some space for our VG/PV
       box.vm.disk :disk, size: "20GB", name: "lvm-disk"
@@ -45,23 +51,11 @@ Vagrant.configure("2") do |config|
         vb.cpus = 2
         vb.customize ["modifyvm", :id, "--nested-hw-virt", "on"]
       end
-      box.vm.host_name = hostname
       
-      # deploy the ssh key of controller
-      # for root
-      box.vm.provision "shell", inline: <<-SCRIPT
-        sudo mkdir -p /root/.ssh
-        sudo chmod u=rwx,g=,o= /root/.ssh
-        sudo echo '#{public_key}' >> /root/.ssh/authorized_keys
-        sudo chmod -R 600 /root/.ssh/authorized_keys
-        SCRIPT
-
       # for vagrant
       box.vm.provision "shell", inline: <<-SCRIPT
-        mkdir -p /home/vagrant/.ssh
-        chmod u=rwx,g=,o= /home/vagrant/.ssh
-        echo '#{public_key}' >> /home/vagrant/.ssh/authorized_keys
-        chmod -R 600  /home/vagrant/.ssh/authorized_keys
+        echo '#{public_key}' >> /root/.ssh/authorized_keys
+        chmod -R 600  /root/.ssh/authorized_keys
         SCRIPT
 
       box.vm.provision "shell", path: "compute/1_prepare_os.sh"
@@ -69,10 +63,11 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  computeNodes.keys.sort.each do |key|
-    hostname = computeNodes[key]['hostname']
-    ip_vm = computeNodes[key]['ip_vm']
-    ip_management = computeNodes[key]['ip_management']
+  # our controller nodes
+  controllerNodes.keys.sort.each do |key|
+    hostname = controllerNodes[key]['hostname']
+    ip_vm = controllerNodes[key]['ip_vm']
+    ip_management = controllerNodes[key]['ip_management']
 
     config.vm.define hostname do |box|
       box.vm.provider :virtualbox do |vb|
@@ -84,15 +79,16 @@ Vagrant.configure("2") do |config|
       #box.vm.network "forwarded_port", guest: 80, host: 8080
       #box.vm.network "forwarded_port", guest: 2616, host: 2616
     
+      # openstack management network - must come first so the hostname is assigned to this network
+      box.vm.network "private_network", ip: ip_management, hostname: true, virtualbox__intnet: true
       # VM network
       box.vm.network "private_network", ip: ip_vm, virtualbox__intnet: true
-      # openstack management network
-      box.vm.network "private_network", ip:ip_management, hostname: true, virtualbox__intnet: true
-
+     
       box.vm.provision "shell", inline: <<-SCRIPT
-        sudo echo '#{public_key}' >> /home/vagrant/.ssh/authorized_keys
-        sudo chmod -R 600 /home/vagrant/.ssh/authorized_keys
+        sudo echo '#{public_key}' >> /root/.ssh/authorized_keys
+        sudo chmod -R 600 /root/.ssh/authorized_keys
         SCRIPT
+      box.vm.provision "shell", path: "controller/1_prepare_os.sh"
     end
   end
 
@@ -102,36 +98,24 @@ Vagrant.configure("2") do |config|
       vb.memory = 1000
       vb.cpus = 1
     end
-    hostname = "deploy"
-    box.vm.host_name = hostname
-
-    #box.vm.network "forwarded_port", guest: 80, host: 8080
-    #box.vm.network "forwarded_port", guest: 2616, host: 2616
+    box.vm.host_name = deploy['hostname']
   
-    box.vm.network "private_network", ip: "172.30.0.2", hostname: true, virtualbox__intnet: true
-    # openstack management network
-    box.vm.network "private_network", ip: "172.31.0.2", virtualbox__intnet: true
-
-    #box.vm.network "public_network", ip: "192.168.0.2", bridge: 'enp5s0'
+    # deploy is only in the management network
+    box.vm.network "private_network", ip: deploy['ip_management'], hostname: true, virtualbox__intnet: true
 
     config.vm.synced_folder "config/", "/mnt/config"
     #deploy ssh private/public key before we install
     box.vm.provision "shell", inline: <<-SCRIPT
-      sudo mkdir -p /root/.ssh
-      sudo chmod u=rwx,g=,o= /root/.ssh
-      sudo echo '#{public_key}' >> /root/.ssh/authorized_keys
-      sudo chmod -R 600 /root/.ssh/id_rsa
-      sudo chmod -R 600 /root/.ssh/id_rsa.pub
-      sudo chmod -R 600 /root/.ssh/authorized_keys
-      SCRIPT
-
-    box.vm.provision "shell", inline: <<-SCRIPT
-      sudo echo '#{public_key}' >> /home/vagrant/.ssh/authorized_keys
-      sudo chmod -R 600 /home/vagrant/.ssh/authorized_keys
+      sudo echo '#{private_key}' > /root/.ssh/id_rsa_cluster
+      sudo echo '#{public_key}' > /root/.ssh/id_rsa_cluster.pub
+      sudo chmod -R 600 /root/.ssh/id_rsa_cluster
+      sudo chmod -R 600 /root/.ssh/id_rsa_cluster.pub
       SCRIPT
 
     box.vm.provision "shell", path: "deploy/1_prepare_os.sh"
     box.vm.provision "shell", path: "deploy/2_install_kolla.sh"
-    box.vm.provision "shell", path: "deploy/3_openstack_install.sh"
+    box.vm.provision "shell", path: "deploy/3_configure_kolla.sh"
+    box.vm.provision "shell", path: "deploy/4_verify.sh"
+    box.vm.provision "shell", path: "deploy/5_openstack_install.sh"
   end
 end

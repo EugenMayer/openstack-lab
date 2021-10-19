@@ -2,7 +2,7 @@ init:
 	./generate_keys.sh
 
 start: init
-	vagrant up --no-parallel
+	VAGRANT_EXPERIMENTAL="disks" vagrant up --no-parallel
 
 controller:
 	vagrant ssh controller

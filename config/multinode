@@ -25,7 +25,8 @@ controller
 #compute01 neutron_external_interface=eth0 api_interface=em1 storage_interface=em1 tunnel_interface=em1
 
 [storage]
-controller
+compute1
+compute2
 
 [deployment]
 localhost       ansible_connection=local

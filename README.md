@@ -25,6 +25,8 @@ make start
 
 You should now have a `openstack` installation with 1 contrroller and 2 compute nodes able to start VMs.
 
+Connect via `http://localhost:8080`
+
 ### Connect to boxes via ssh
 
 ```bash

@@ -79,8 +79,8 @@ Vagrant.configure("2") do |config|
       end
       box.vm.host_name = hostname
 
-      box.vm.network "forwarded_port",  host: 8080, guest_ip: ip_management, guest: 80
-      box.vm.network "forwarded_port",  host: 8000, guest_ip: ip_management, guest: 8000
+      # box.vm.network "forwarded_port",  host: 8080, guest_ip: ip_management, guest: 80
+      # box.vm.network "forwarded_port",  host: 8000, guest_ip: ip_management, guest: 8000
 
       #box.vm.network "forwarded_port", guest: 2616, host: 2616
     

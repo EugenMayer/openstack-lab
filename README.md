@@ -25,7 +25,7 @@ make start
 
 You should now have a `openstack` installation with 1 contrroller and 2 compute nodes able to start VMs.
 
-Connect via `http://localhost:8080`
+Connect via `http://172.27.240.2`
 
 The credentials are
 
@@ -55,10 +55,10 @@ And overview of most kolla-ansibe docs can be found [here](https://docs.openstac
 
 ### Network
 
-We have 2 internal networks attached to the vm:
+We have 2 networks attached to the vm:
 
-- `mngmnt`: `172.27.240.0/24` for the management of the cluster / internal communication between controller / compute nodes
-- `vmlan`: `10.0.0.0/24` for the vm-lan and neutron network
+- `mngmnt`: `172.27.240.0/24` for the management of the cluster / internal communication between controller / compute nodes. This network can be access from the host
+- `vmlan`: `10.0.0.0/24` for the vm-lan and neutron network. This is a internal network only
 
 - Deploy has 2 networks:
   1. `eth1` as `mngmnt` (172.27.240.240)

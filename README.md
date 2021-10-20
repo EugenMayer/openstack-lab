@@ -27,6 +27,11 @@ You should now have a `openstack` installation with 1 contrroller and 2 compute 
 
 Connect via `http://localhost:8080`
 
+The credentials are
+
+- User: `admin`
+- Password: run `make creds` to see the password
+
 ### Connect to boxes via ssh
 
 ```bash
@@ -43,6 +48,10 @@ make clean
 ```
 
 ## Advanced / Internals
+
+### Docs
+
+And overview of most kolla-ansibe docs can be found [here](https://docs.openstack.org/kolla-ansible/latest/admin/index.html)
 
 ### Network
 

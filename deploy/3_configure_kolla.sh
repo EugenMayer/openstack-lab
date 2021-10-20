@@ -33,6 +33,9 @@ kolla_internal_vip_address: "10.0.0.250"
 # kolla_external_vip_interface: "enp0s8"
 kolla_enable_tls_external: "false"
 
+#kolla_internal_fqdn=controller.lan
+#kolla_external_fqdn=controller.dev
+
 # for cinder see https://docs.openstack.org/kolla-ansible/latest/reference/storage/cinder-guide.html
 # Disable cinder, we do not require it
 enable_cinder: "no"

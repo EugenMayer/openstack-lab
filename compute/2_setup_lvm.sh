@@ -1,5 +1,5 @@
 #!/bin/sh
 set -e
 
-sudo pvcreate /dev/sdc
-sudo vgcreate cinder-volumes /dev/sdc
+sudo pvcreate /dev/sdb
+sudo vgcreate cinder-volumes /dev/sdb

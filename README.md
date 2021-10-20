@@ -6,7 +6,7 @@ OpenStack is deployed vanilla using `Kolla` via the `deploy` box.
 Status:
 
 - openstack: Xena
-- Ubuntu 20.04 (controller and nodes)
+- Debian: 11 (bullseye) (controller and nodes)
 
 ## Requirements
 
@@ -57,19 +57,19 @@ And overview of most kolla-ansibe docs can be found [here](https://docs.openstac
 
 We have 2 internal networks attached to the vm:
 
-- `mngmnt`: `10.0.0.0/24` for the management of the cluster / internal communication between controller / compute nodes
-- `vmlan`: `172.30.0.0/24` for the vm-lan and neutron network
+- `mngmnt`: `172.27.240.0/24` for the management of the cluster / internal communication between controller / compute nodes
+- `vmlan`: `10.0.0.0/24` for the vm-lan and neutron network
 
 - Deploy has 2 networks:
-  1. `enp0s8` as `mngmnt` (10.0.0.240)
+  1. `eth1` as `mngmnt` (172.27.240.240)
   2. (the host-only network we do not care about)
 - Controller has 3 networks:
-  1. `enp0s8` as `mngmnt` (10.0.0.2)
-  1. `enp0s9` as `vmlan` (172.30.0.2)
+  1. `eth1` as `mngmnt` (172.27.240.2)
+  1. `eth2` as `vmlan` (10.0.0.2)
   1. and (the host-only network we do not care about)
 - Compute 1/2 have 3 networks:
-  1. `enp0s8` as `mngmnt` (10.0.0.3/10.0.0.4)
-  2. `enp0s9` as `vmlan` (172.30.0.3/172.30.0.4)
+  1. `eth1` as `mngmnt` (172.27.240.3/172.27.240.4)
+  2. `eth2` as `vmlan` (10.0.0.3/10.0.0.4)
   3. and (the host-only network we do not care about)
 
 ### Troubleshooting

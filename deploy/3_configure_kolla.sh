@@ -19,18 +19,18 @@ kolla_base_distro: "ubuntu"
 kolla_install_type: "source"
 
 # see https://docs.openstack.org/kolla-ansible/latest/admin/production-architecture-guide.html#network-configuration
-# enp0s8 is the mngmnt interface
-network_interface: "enp0s8"
+# eth1 is the mngmnt interface
+network_interface: "eth1"
 # vm lan
-neutron_external_interface: "enp0s9"
+neutron_external_interface: "eth2"
 
 # see https://docs.openstack.org/kolla/newton/advanced-configuration.html
 # see https://docs.oracle.com/cd/E96260_01/E96263/html/kolla-endpoints.html
 # All compute nodes / controller must be in the same network, while this IP must yet not be assigned to any
 # any of those
-kolla_internal_vip_address: "10.0.0.250"
+kolla_internal_vip_address: "172.27.240.250"
 # defaults to network_interface
-# kolla_external_vip_interface: "enp0s8"
+# kolla_external_vip_interface: "eth1"
 kolla_enable_tls_external: "false"
 
 #kolla_internal_fqdn=controller.lan

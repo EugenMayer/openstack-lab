@@ -1,14 +1,14 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-deploy =  {'hostname' => 'deploy',  "ip_management" => "10.0.0.240"}
+deploy =  {'hostname' => 'deploy',  "ip_management" => "172.27.240.240"}
 controllerNodes = {
-  'compute1' => {'hostname' => 'controller', "ip_vm" => "172.30.0.2", "ip_management" => "10.0.0.2"},
+  'compute1' => {'hostname' => 'controller', "ip_vm" => "10.0.0.2", "ip_management" => "172.27.240.2"},
 }
 
 computeNodes = {
-  'compute1' => {'hostname' => 'compute1', "ip_vm" => "172.30.0.3", "ip_management" => "10.0.0.3"},
-  'compute2' => {'hostname' => 'compute2', "ip_vm" => "172.30.0.4", "ip_management" => "10.0.0.4"}
+  'compute1' => {'hostname' => 'compute1', "ip_vm" => "10.0.0.3", "ip_management" => "172.27.240.3"},
+  'compute2' => {'hostname' => 'compute2', "ip_vm" => "10.0.0.4", "ip_management" => "172.27.240.4"}
 }
 
 Vagrant.configure("2") do |config|
@@ -21,7 +21,8 @@ Vagrant.configure("2") do |config|
 
   #config.vm.box = "centos/8"
   #config.vm.box = "ubuntu/hirsute64"
-  config.vm.box = "ubuntu/focal64"
+  #config.vm.box = "ubuntu/focal64"
+  config.vm.box = 'debian/bullseye64'
 
   #ensure our hosts can resolve themselfs via hostnames 
   config.hostmanager.enabled = true
@@ -37,7 +38,7 @@ Vagrant.configure("2") do |config|
       box.vm.host_name = hostname
 
       # openstack management network - must come first so the hostname is assigned to this network
-      box.vm.network "private_network", ip: computeNodes[key]['ip_management'], hostname: true, virtualbox__intnet: true
+      box.vm.network "private_network", ip: computeNodes[key]['ip_management'], hostname: true #, virtualbox__intnet: true
       # VM network
       box.vm.network "private_network", ip: computeNodes[key]['ip_vm'], virtualbox__intnet: true
 
@@ -54,6 +55,8 @@ Vagrant.configure("2") do |config|
       
       # for vagrant
       box.vm.provision "shell", inline: <<-SCRIPT
+        sudo mkdir -p /root/.ssh
+        sudo chmod u=rwx,g=,o= /root/.ssh
         echo '#{public_key}' >> /root/.ssh/authorized_keys
         chmod -R 600  /root/.ssh/authorized_keys
         SCRIPT
@@ -82,11 +85,13 @@ Vagrant.configure("2") do |config|
       #box.vm.network "forwarded_port", guest: 2616, host: 2616
     
       # openstack management network - must come first so the hostname is assigned to this network
-      box.vm.network "private_network", ip: ip_management, hostname: true, virtualbox__intnet: true
+      box.vm.network "private_network", ip: ip_management, hostname: true #, virtualbox__intnet: true
       # VM network
       box.vm.network "private_network", ip: ip_vm, virtualbox__intnet: true
      
       box.vm.provision "shell", inline: <<-SCRIPT
+        sudo mkdir -p /root/.ssh
+        sudo chmod u=rwx,g=,o= /root/.ssh
         sudo echo '#{public_key}' >> /root/.ssh/authorized_keys
         sudo chmod -R 600 /root/.ssh/authorized_keys
         SCRIPT
@@ -103,13 +108,15 @@ Vagrant.configure("2") do |config|
     box.vm.host_name = deploy['hostname']
   
     # deploy is only in the management network
-    box.vm.network "private_network", ip: deploy['ip_management'], hostname: true, virtualbox__intnet: true
+    box.vm.network "private_network", ip: deploy['ip_management'], hostname: true #, virtualbox__intnet: true
 
     config.vm.synced_folder "config/", "/mnt/config"
 
     # deploy ssh private/public key before we install
     # This ensure we have root ssh access on all nodes (controller/compute)
     box.vm.provision "shell", inline: <<-SCRIPT
+      sudo mkdir -p /root/.ssh
+      sudo chmod u=rwx,g=,o= /root/.ssh    
       sudo echo '#{private_key}' > /root/.ssh/id_rsa_cluster
       sudo echo '#{public_key}' > /root/.ssh/id_rsa_cluster.pub
       sudo chmod -R 600 /root/.ssh/id_rsa_cluster

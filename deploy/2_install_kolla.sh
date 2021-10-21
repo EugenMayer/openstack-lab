@@ -15,13 +15,16 @@ source $VENV_PATH/bin/activate
 ######## Install ansible
 pip install -U pip
 echo "Installing Ansible"
+# kolla requires below 5 but bigger 2, see https://docs.openstack.org/kolla-ansible/latest/user/quickstart.html
 pip install 'ansible<5.0'
 
+
 echo "Installing Kolla"
+# install stable
 # stable, yet wallaby only
 #pip install kolla-ansible
 
-######## from source for xena compat
+# from source for xena compat
 mkdir -p /opt/source
 git clone -b stable/xena https://github.com/openstack/kolla /opt/source/kolla
 git clone -b stable/xena https://github.com/openstack/kolla-ansible /opt/source/kolla-ansible

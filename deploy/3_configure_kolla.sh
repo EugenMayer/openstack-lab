@@ -13,8 +13,8 @@ cp -r $VENV_PATH/share/kolla-ansible/etc_examples/kolla/* /etc/kolla
 cp $VENV_PATH/share/kolla-ansible/ansible/inventory/* .
 sudo mkdir -p /etc/kolla/globals.d/
 
-# TODO: for production which should use LVM
-echo '''kolla_base_distro: "ubuntu"
+echo '''
+# defines which os and version the docker-images are run on.
 kolla_base_distro: "ubuntu"
 kolla_install_type: "source"
 
@@ -37,7 +37,7 @@ kolla_enable_tls_external: "false"
 #kolla_external_fqdn=controller.dev
 
 # for cinder see https://docs.openstack.org/kolla-ansible/latest/reference/storage/cinder-guide.html
-# Disable cinder, we do not require it
+# Disable cinder, we do not require it. We use local storages on the compute nodes
 enable_cinder: "no"
 #enable_cinder_backend_lvm: "true"
 #enable_cinder_backend_nfs: "true"
@@ -45,8 +45,8 @@ enable_cinder: "no"
 # if we use globals.d provisioning fails since everyting in /e/k/globals.yml is commented our
 # /etc/kolla/globals.d/our_globals.yml
 
-###### our specific configuration (xena)
+###### our specific configuration (xena) "who has what role"
 cp /mnt/config/multinode /opt/kolla/multinode
 
-# generate passwords
+# generate passwords, including our admin password
 kolla-genpwd

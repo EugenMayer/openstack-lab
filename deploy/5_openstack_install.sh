@@ -14,10 +14,11 @@ kolla-ansible -i ./multinode deploy
 
 # create openrc and install client
 pip install python-openstackclient
+# generates the ENV vars to /etc/kolla/admin-openrc.sh to be able to authenticate the openstack cli
 kolla-ansible post-deploy
 
 
-echo "provision main networks and images once"
+echo "provision demo networks and demo images once"
 cd /opt/kolla
 . /etc/kolla/admin-openrc.sh
 /opt/kolla/share/kolla-ansible/init-runonce

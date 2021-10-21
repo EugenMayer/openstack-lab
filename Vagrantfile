@@ -117,10 +117,10 @@ Vagrant.configure("2") do |config|
     box.vm.provision "shell", inline: <<-SCRIPT
       sudo mkdir -p /root/.ssh
       sudo chmod u=rwx,g=,o= /root/.ssh    
-      sudo echo '#{private_key}' > /root/.ssh/id_rsa_cluster
-      sudo echo '#{public_key}' > /root/.ssh/id_rsa_cluster.pub
-      sudo chmod -R 600 /root/.ssh/id_rsa_cluster
-      sudo chmod -R 600 /root/.ssh/id_rsa_cluster.pub
+      sudo echo '#{private_key}' > /root/.ssh/id_rsa
+      sudo echo '#{public_key}' > /root/.ssh/id_rsa.pub
+      sudo chmod -R 600 /root/.ssh/id_rsa
+      sudo chmod -R 600 /root/.ssh/id_rsa.pub
       SCRIPT
 
     box.vm.provision "shell", path: "deploy/1_prepare_os.sh"

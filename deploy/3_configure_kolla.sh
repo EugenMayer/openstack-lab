@@ -41,6 +41,9 @@ kolla_enable_tls_external: "false"
 enable_cinder: "no"
 #enable_cinder_backend_lvm: "true"
 #enable_cinder_backend_nfs: "true"
+
+# try qemu since kvm seems to not work with virtualbox
+nova_compute_virt_type: qemu
 ''' > /etc/kolla/globals.yml
 # if we use globals.d provisioning fails since everyting in /e/k/globals.yml is commented our
 # /etc/kolla/globals.d/our_globals.yml

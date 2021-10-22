@@ -51,7 +51,7 @@ make clean
 
 ### Docs
 
-And overview of most kolla-ansibe docs can be found [here](https://docs.openstack.org/kolla-ansible/latest/admin/index.html)
+And overview of most kolla-ansible docs can be found [here](https://docs.openstack.org/kolla-ansible/latest/admin/index.html)
 
 ### Network
 
@@ -75,3 +75,15 @@ We have 2 networks attached to the vm:
 ### Troubleshooting
 
 - If the controller has not enough ram, it creates a huge load after the initial deployment. It seems like about 10GB is what it needs
+
+### Using the openstack CLI
+
+You can now run the openstack cli by connecting to deploy and run:
+
+```bash
+$ vagrant ssh deploy
+$ sudo -s
+$ source /opt/kolla/bin/activate
+$ . /etc/kolla/admin-openrc.sh
+$ openstack {command}
+```

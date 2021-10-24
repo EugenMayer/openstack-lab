@@ -71,8 +71,8 @@ The base `multinode` is in `/multinode_original` which is based on `master` comm
 **The common networks are:**
 
 - internal `mngmnt`: `172.27.240.0/24` for the management of the cluster / internal communication between controller / compute nodes. This network can be access from the host
-- provider network `vmlan/self service`: `10.0.0.0/24` for the vm-lan and neutron network.
-- provider network `wan`: `203.0.113.0/24` for the provider floating ups (WAN)
+- provider network `self service/vmlan`: `10.0.0.0/24` for the vm-lan and neutron network.
+- provider network `wan`: `203.0.113.0/24` for the provider floating ips (WAN). We picked that ip range since openstack tutorials pick those too
 
 **Deploy has 2 networks:**
 
@@ -81,13 +81,13 @@ The base `multinode` is in `/multinode_original` which is based on `master` comm
 **Controller has 3 networks:**
 
 1. `eth1` as `mngmnt` (172.27.240.2)
-2. `eth2` as `vmlan` (10.0.0.2)
+2. `eth2` as `self-service` (10.0.0.2)
 3. `eth3` as `wan` (203.0.113.2)
 
 **Compute 1/2 have 3 networks:**
 
 1. `eth1` as `mngmnt` (172.27.240.3/172.27.240.4)
-2. `eth2` as `vmlan` (10.0.0.3/10.0.0.4)
+2. `eth2` as `self-service` (10.0.0.3/10.0.0.4)
 3. `eth3` as `wan` (203.0.113.3/203.0.113.3) 8. and (the host-only network we do not care about)
 
 ### Troubleshooting

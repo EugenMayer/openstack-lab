@@ -3,12 +3,12 @@
 
 deploy =  {'hostname' => 'deploy',  "ip_management" => "172.27.240.240"}
 controllerNodes = {
-  'compute1' => {'hostname' => 'controller', "ip_vm" => "10.0.0.2", "ip_management" => "172.27.240.2"},
+  'compute1' => {'hostname' => 'controller', "ip_vm" => "10.0.0.2", "ip_management" => "172.27.240.2", "ip_wan" => "203.0.113.2"},
 }
 
 computeNodes = {
-  'compute1' => {'hostname' => 'compute1', "ip_vm" => "10.0.0.3", "ip_management" => "172.27.240.3"},
-  'compute2' => {'hostname' => 'compute2', "ip_vm" => "10.0.0.4", "ip_management" => "172.27.240.4"}
+  'compute1' => {'hostname' => 'compute1', "ip_vm" => "10.0.0.3", "ip_management" => "172.27.240.3", "ip_wan" => "203.0.113.3"},
+  'compute2' => {'hostname' => 'compute2', "ip_vm" => "10.0.0.4", "ip_management" => "172.27.240.4", "ip_wan" => "203.0.113.4"}
 }
 
 Vagrant.configure("2") do |config|
@@ -39,8 +39,10 @@ Vagrant.configure("2") do |config|
 
       # openstack management network - must come first so the hostname is assigned to this network
       box.vm.network "private_network", ip: computeNodes[key]['ip_management'], hostname: true #, virtualbox__intnet: true
-      # VM network
+      # Provider network: vm-lan or "self service"
       box.vm.network "private_network", ip: computeNodes[key]['ip_vm'], virtualbox__intnet: true
+      # Provider network: wan/floating ip
+      box.vm.network "private_network", ip: computeNodes[key]['ip_wan'], virtualbox__intnet: true
 
 
       # we need some space for our VG/PV
@@ -69,8 +71,9 @@ Vagrant.configure("2") do |config|
   # our controller nodes - we actually have only 1
   controllerNodes.keys.sort.each do |key|
     hostname = controllerNodes[key]['hostname']
-    ip_vm = controllerNodes[key]['ip_vm']
     ip_management = controllerNodes[key]['ip_management']
+    ip_vm = controllerNodes[key]['ip_vm']
+    ip_wan = controllerNodes[key]['ip_wan']
 
     config.vm.define hostname do |box|
       box.vm.provider :virtualbox do |vb|
@@ -78,17 +81,13 @@ Vagrant.configure("2") do |config|
         vb.cpus = 6
       end
       box.vm.host_name = hostname
-
-      # box.vm.network "forwarded_port",  host: 8080, guest_ip: ip_management, guest: 80
-      # box.vm.network "forwarded_port",  host: 8000, guest_ip: ip_management, guest: 8000
-
-      #box.vm.network "forwarded_port", guest: 2616, host: 2616
-    
       # openstack management network - must come first so the hostname is assigned to this network
       box.vm.network "private_network", ip: ip_management, hostname: true #, virtualbox__intnet: true
-      # VM network
+      # Provider network: vm
       box.vm.network "private_network", ip: ip_vm, virtualbox__intnet: true
-     
+      # Provider network: wan/floatingip
+      box.vm.network "private_network", ip: ip_wan, virtualbox__intnet: true
+
       box.vm.provision "shell", inline: <<-SCRIPT
         sudo mkdir -p /root/.ssh
         sudo chmod u=rwx,g=,o= /root/.ssh

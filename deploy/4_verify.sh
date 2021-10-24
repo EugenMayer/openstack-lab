@@ -12,4 +12,4 @@ source $VENV_PATH/bin/activate
 ssh-keyscan controller compute1 compute2 >> /root/.ssh/known_hosts
 
 # test connectivity to hosts
-ansible -i multinode all -m ping
+ansible -i /mnt/config/ all -m ping

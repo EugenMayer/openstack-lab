@@ -15,22 +15,37 @@ sudo mkdir -p /etc/kolla/globals.d/
 
 echo '''
 # defines which os and version the docker-images are run on.
-kolla_base_distro: "ubuntu"
+kolla_base_distro: "debian"
 kolla_install_type: "source"
+# openstack_release:
 
+# see https://docs.openstack.org/kolla-ansible/latest/reference/networking/neutron.html 
 # see https://docs.openstack.org/kolla-ansible/latest/admin/production-architecture-guide.html#network-configuration
 # eth1 is the mngmnt interface
-network_interface: "eth1"
-# vm lan
-neutron_external_interface: "eth2"
+# EXCLUDING here, so we can use / simulate control:vars / compute:vars to override the network_interface
+# we do this in config/group_vars (or /mnt/config in deployer)
+# per host, see "Host group vars" in https://docs.openstack.org/kolla-ansible/latest/user/multinode.html
+# network_interface: "eth1"
 
+# we might consider tunneling over the first provider network
+# tunnel_interface: "eth2"
+
+# eth2 is provider network for vm-lan "self service"
+# eth3 is provider network for WAN/floating ip
+enable_neutron_provider_networks: "yes"
+# EXCLUDING here, so we can use / simulate control:vars / compute:vars to override the network_interface
+# we do this in config/group_vars (or /mnt/config in deployer)
+# per host, see "Host group vars" in https://docs.openstack.org/kolla-ansible/latest/user/multinode.html
+#neutron_external_interface: "eth2,eth3"
+#neutron_bridge_name: "br-kwlan,br-wan"
+
+
+# https://docs.openstack.org/kolla-ansible/latest/reference/networking/neutron.html
 # see https://docs.openstack.org/kolla/newton/advanced-configuration.html
 # see https://docs.oracle.com/cd/E96260_01/E96263/html/kolla-endpoints.html
 # All compute nodes / controller must be in the same network, while this IP must yet not be assigned to any
 # any of those
 kolla_internal_vip_address: "172.27.240.250"
-# defaults to network_interface
-# kolla_external_vip_interface: "eth1"
 kolla_enable_tls_external: "false"
 
 #kolla_internal_fqdn=controller.lan
@@ -39,17 +54,11 @@ kolla_enable_tls_external: "false"
 # for cinder see https://docs.openstack.org/kolla-ansible/latest/reference/storage/cinder-guide.html
 # Disable cinder, we do not require it. We use local storages on the compute nodes
 enable_cinder: "no"
-#enable_cinder_backend_lvm: "true"
-#enable_cinder_backend_nfs: "true"
 
-# try qemu since kvm seems to not work with virtualbox
+
+# HACK/NO PRODUCTION: use qemu since for nested vritualization under virtualbox., kvm does kernel panic on guest instances
 nova_compute_virt_type: qemu
 ''' > /etc/kolla/globals.yml
-# if we use globals.d provisioning fails since everyting in /e/k/globals.yml is commented our
-# /etc/kolla/globals.d/our_globals.yml
-
-###### our specific configuration (xena) "who has what role"
-cp /mnt/config/multinode /opt/kolla/multinode
 
 # generate passwords, including our admin password
 kolla-genpwd

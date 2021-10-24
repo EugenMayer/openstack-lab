@@ -6,11 +6,11 @@ cd $VENV_PATH
 source $VENV_PATH/bin/activate
 
 # init the server (base only)
-kolla-ansible -i ./multinode bootstrap-servers
+kolla-ansible -i /mnt/config bootstrap-servers
 # ensure all the required bits and configuration are in place
-kolla-ansible -i ./multinode prechecks
+kolla-ansible -i /mnt/config prechecks
 # deploy cluster, e.g. controller and compute (monitor,storage,neutron)
-kolla-ansible -i ./multinode deploy
+kolla-ansible -i /mnt/config deploy
 
 # create openrc and install client
 pip install python-openstackclient

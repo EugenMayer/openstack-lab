@@ -3,6 +3,9 @@
 Start an self contained OpenStack LAB with 1 controller node and 2 compute nodes - all using vagrant in one command.
 OpenStack is deployed vanilla using `Kolla` via the `deploy` box.
 
+This setup offers a `self-service` provider network , a `wan` provider network for floating ips, a `management` network for the
+cluster management and node interop.
+
 Status:
 
 - openstack: Xena
@@ -53,24 +56,39 @@ make clean
 
 And overview of most kolla-ansible docs can be found [here](https://docs.openstack.org/kolla-ansible/latest/admin/index.html)
 
+### Inventory configuration
+
+You find the inventory configuration in `config/` including the `group_vars`. This folder is mounted via `vagrant` into `/mnt/config/` and then used via `kolla-ansible -i /mnt/config`
+
+`config/mulitnode/` was taken from the original and modified in the top
+until the marker `############# NO CHANGES BELOW THIS LINE ###############`
+The base `multinode` is in `/multinode_original` which is based on `master` commit `37136478d7530493465d484db06c4b04b3afdd93`
+
 ### Network
 
-We have 2 networks attached to the vm:
+`eth0` is ignored here since it is a host-only virtualbox network for virtualbox interops. So just ignore that interface.
 
-- `mngmnt`: `172.27.240.0/24` for the management of the cluster / internal communication between controller / compute nodes. This network can be access from the host
-- `vmlan`: `10.0.0.0/24` for the vm-lan and neutron network. This is a internal network only
+**The common networks are:**
 
-- Deploy has 2 networks:
-  1. `eth1` as `mngmnt` (172.27.240.240)
-  2. (the host-only network we do not care about)
-- Controller has 3 networks:
-  1. `eth1` as `mngmnt` (172.27.240.2)
-  1. `eth2` as `vmlan` (10.0.0.2)
-  1. and (the host-only network we do not care about)
-- Compute 1/2 have 3 networks:
-  1. `eth1` as `mngmnt` (172.27.240.3/172.27.240.4)
-  2. `eth2` as `vmlan` (10.0.0.3/10.0.0.4)
-  3. and (the host-only network we do not care about)
+- internal `mngmnt`: `172.27.240.0/24` for the management of the cluster / internal communication between controller / compute nodes. This network can be access from the host
+- provider network `vmlan/self service`: `10.0.0.0/24` for the vm-lan and neutron network.
+- provider network `wan`: `203.0.113.0/24` for the provider floating ups (WAN)
+
+**Deploy has 2 networks:**
+
+1. `eth1` as `mngmnt` (172.27.240.240)
+
+**Controller has 3 networks:**
+
+1. `eth1` as `mngmnt` (172.27.240.2)
+2. `eth2` as `vmlan` (10.0.0.2)
+3. `eth3` as `wan` (203.0.113.2)
+
+**Compute 1/2 have 3 networks:**
+
+1. `eth1` as `mngmnt` (172.27.240.3/172.27.240.4)
+2. `eth2` as `vmlan` (10.0.0.3/10.0.0.4)
+3. `eth3` as `wan` (203.0.113.3/203.0.113.3) 8. and (the host-only network we do not care about)
 
 ### Troubleshooting
 

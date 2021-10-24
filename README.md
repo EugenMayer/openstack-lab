@@ -16,6 +16,9 @@ Status:
 - Installed `Virtualbox` and `Vagrant` on your system
 - Installed `vagrant plugin install vagrant-hostmanager`
 - About 15GB of RAM (10 for the controller and 2 for each node and 1 for the deploy node).
+- If you want to start `instances` (nested virtualization), for now this does only work with AMD CPUs (virtualbox 6.1.26 as for now).
+  Intel is known to have more issue nested virtualization under VirtualBox, nothing we can do about that right now. Might
+  change in the future. With intel you get a GPT starting issue when booting an instance
 
 ## Usage
 

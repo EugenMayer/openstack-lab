@@ -15,7 +15,7 @@ sudo mkdir -p /etc/kolla/globals.d/
 
 echo '''
 # defines which os and version the docker-images are run on.
-kolla_base_distro: "debian"
+kolla_base_distro: "ubuntu"
 kolla_install_type: "source"
 # openstack_release:
 
@@ -33,6 +33,9 @@ kolla_install_type: "source"
 # eth2 is provider network for vm-lan "self service"
 # eth3 is provider network for WAN/floating ip
 enable_neutron_provider_networks: "yes"
+
+# switch to ovn
+neutron_plugin_agent: "ovn"
 # EXCLUDING here, so we can use / simulate control:vars / compute:vars to override the network_interface
 # we do this in config/group_vars (or /mnt/config in deployer)
 # per host, see "Host group vars" in https://docs.openstack.org/kolla-ansible/latest/user/multinode.html

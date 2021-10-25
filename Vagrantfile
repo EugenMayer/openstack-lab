@@ -3,12 +3,12 @@
 
 deploy =  {'hostname' => 'deploy',  "ip_management" => "172.27.240.240"}
 controllerNodes = {
-  'compute1' => {'hostname' => 'controller', "ip_vm" => "10.0.0.2", "ip_management" => "172.27.240.2", "ip_wan" => "203.0.113.2"},
+  'compute1' => {'hostname' => 'controller', "ip_management" => "172.27.240.2", "ip_wan" => "203.0.113.2"},
 }
 
 computeNodes = {
-  'compute1' => {'hostname' => 'compute1', "ip_vm" => "10.0.0.3", "ip_management" => "172.27.240.3", "ip_wan" => "203.0.113.3"},
-  'compute2' => {'hostname' => 'compute2', "ip_vm" => "10.0.0.4", "ip_management" => "172.27.240.4", "ip_wan" => "203.0.113.4"}
+  'compute1' => {'hostname' => 'compute1',  "ip_management" => "172.27.240.3", "ip_wan" => "203.0.113.3"},
+  'compute2' => {'hostname' => 'compute2', "ip_management" => "172.27.240.4", "ip_wan" => "203.0.113.4"}
 }
 
 Vagrant.configure("2") do |config|
@@ -39,8 +39,6 @@ Vagrant.configure("2") do |config|
 
       # openstack management network - must come first so the hostname is assigned to this network
       box.vm.network "private_network", ip: computeNodes[key]['ip_management'], hostname: true #, virtualbox__intnet: true
-      # Provider network: vm-lan or "self service"
-      box.vm.network "private_network", ip: computeNodes[key]['ip_vm'], virtualbox__intnet: true
       # Provider network: wan/floating ip
       box.vm.network "private_network", ip: computeNodes[key]['ip_wan'], virtualbox__intnet: true
 
@@ -83,8 +81,6 @@ Vagrant.configure("2") do |config|
       box.vm.host_name = hostname
       # openstack management network - must come first so the hostname is assigned to this network
       box.vm.network "private_network", ip: ip_management, hostname: true #, virtualbox__intnet: true
-      # Provider network: vm
-      box.vm.network "private_network", ip: ip_vm, virtualbox__intnet: true
       # Provider network: wan/floatingip
       box.vm.network "private_network", ip: ip_wan, virtualbox__intnet: true
 

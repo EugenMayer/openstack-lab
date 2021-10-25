@@ -3,13 +3,13 @@
 Start an self contained OpenStack LAB with 1 controller node and 2 compute nodes - all using vagrant in one command.
 OpenStack is deployed vanilla using `Kolla` via the `deploy` box.
 
-This setup offers a `self-service` provider network , a `wan` provider network for floating ips, a `management` network for the
-cluster management and node interop.
+Thia `wan` provider network for floating ips, a `management` network for thecluster management and node (OVN) interop.
 
 Status:
 
 - openstack: Xena
 - Debian: 11 (bullseye) (controller and nodes)
+- Neutron type: OVN
 
 ## Requirements
 
@@ -74,7 +74,6 @@ The base `multinode` is in `/multinode_original` which is based on `master` comm
 **The common networks are:**
 
 - internal `mngmnt`: `172.27.240.0/24` for the management of the cluster / internal communication between controller / compute nodes. This network can be access from the host
-- provider network `self service/vmlan`: `10.0.0.0/24` for the vm-lan and neutron network.
 - provider network `wan`: `203.0.113.0/24` for the provider floating ips (WAN). We picked that ip range since openstack tutorials pick those too
 
 **Deploy has 2 networks:**
@@ -84,14 +83,12 @@ The base `multinode` is in `/multinode_original` which is based on `master` comm
 **Controller has 3 networks:**
 
 1. `eth1` as `mngmnt` (172.27.240.2)
-2. `eth2` as `self-service` (10.0.0.2)
-3. `eth3` as `wan` (203.0.113.2)
+2. `eth3` as `wan` (203.0.113.2)
 
 **Compute 1/2 have 3 networks:**
 
 1. `eth1` as `mngmnt` (172.27.240.3/172.27.240.4)
-2. `eth2` as `self-service` (10.0.0.3/10.0.0.4)
-3. `eth3` as `wan` (203.0.113.3/203.0.113.3) 8. and (the host-only network we do not care about)
+2. `eth3` as `wan` (203.0.113.3/203.0.113.3) 8. and (the host-only network we do not care about)
 
 ### Troubleshooting
 

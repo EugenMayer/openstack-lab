@@ -27,9 +27,6 @@ kolla_install_type: "source"
 # per host, see "Host group vars" in https://docs.openstack.org/kolla-ansible/latest/user/multinode.html
 # network_interface: "eth1"
 
-# we might consider tunneling over the first provider network
-# tunnel_interface: "eth2"
-
 # eth2 is provider network for vm-lan "self service"
 # eth3 is provider network for WAN/floating ip
 enable_neutron_provider_networks: "yes"
@@ -39,8 +36,8 @@ neutron_plugin_agent: "ovn"
 # EXCLUDING here, so we can use / simulate control:vars / compute:vars to override the network_interface
 # we do this in config/group_vars (or /mnt/config in deployer)
 # per host, see "Host group vars" in https://docs.openstack.org/kolla-ansible/latest/user/multinode.html
-#neutron_external_interface: "eth2,eth3"
-#neutron_bridge_name: "br-kwlan,br-wan"
+#neutron_external_interface: "eth2"
+#neutron_bridge_name: "br-wan"
 
 
 # https://docs.openstack.org/kolla-ansible/latest/reference/networking/neutron.html

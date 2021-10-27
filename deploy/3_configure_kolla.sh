@@ -27,9 +27,9 @@ kolla_install_type: "source"
 # per host, see "Host group vars" in https://docs.openstack.org/kolla-ansible/latest/user/multinode.html
 # network_interface: "eth1"
 
-# eth2 is provider network for vm-lan "self service"
-# eth3 is provider network for WAN/floating ip
-enable_neutron_provider_networks: "yes"
+# disabled since we are not using DVR
+# see https://docs.openstack.org/kolla-ansible/latest/reference/networking/neutron.html#provider-networks enable_neutron_provider_networks: 'no'
+enable_neutron_provider_networks: "no"
 
 # switch to ovn
 neutron_plugin_agent: "ovn"

@@ -3,7 +3,10 @@
 Start an self contained OpenStack LAB with 1 controller node and 2 compute nodes - all using vagrant in one command.
 OpenStack is deployed vanilla using `Kolla` via the `deploy` box.
 
-Thia `wan` provider network for floating ips, a `management` network for thecluster management and node (OVN) interop.
+Thia `wan` provider network for floating ips, a `management` network for the cluster management and node (OVN) interop.
+
+- We are not using DVR / distributed IPs
+- OVN North-Bridge (gateway node) and (database node) are deployed to the controller
 
 Status:
 
@@ -87,8 +90,9 @@ The base `multinode` is in `/multinode_original` which is based on `master` comm
 
 **Compute 1/2 have 3 networks:**
 
+We have no WAN interface here, since we are not using [DVR](https://docs.openstack.org/networking-ovn/latest/admin/refarch/refarch.html#distributed-floating-ips-dvr) in this setup
+
 1. `eth1` as `mngmnt` (172.27.240.3/172.27.240.4)
-2. `eth3` as `wan` (203.0.113.3/203.0.113.3) 8. and (the host-only network we do not care about)
 
 ### Troubleshooting
 

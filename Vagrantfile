@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
       # openstack management network - must come first so the hostname is assigned to this network
       box.vm.network "private_network", ip: computeNodes[key]['ip_management'], hostname: true #, virtualbox__intnet: true
       # Provider network: wan/floating ip
-      box.vm.network "private_network", ip: computeNodes[key]['ip_wan'], virtualbox__intnet: true
+      # box.vm.network "private_network", ip: computeNodes[key]['ip_wan'], virtualbox__intnet: true
 
 
       # we need some space for our VG/PV

@@ -86,7 +86,7 @@ The base `multinode` is in `/multinode_original` which is based on `master` comm
 **Controller has 3 networks:**
 
 1. `eth1` as `mngmnt` (172.27.240.2)
-2. `eth3` as `wan` (203.0.113.2)
+2. `eth2` as `wan` (203.0.113.2)
 
 **Compute 1/2 have 3 networks:**
 

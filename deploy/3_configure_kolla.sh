@@ -31,6 +31,9 @@ kolla_install_type: "source"
 # see https://docs.openstack.org/kolla-ansible/latest/reference/networking/neutron.html#provider-networks enable_neutron_provider_networks: 'no'
 enable_neutron_provider_networks: "no"
 
+# enable port forwarding
+enable_neutron_port_forwarding: "yes"
+
 # switch to ovn
 neutron_plugin_agent: "ovn"
 # EXCLUDING here, so we can use / simulate control:vars / compute:vars to override the network_interface

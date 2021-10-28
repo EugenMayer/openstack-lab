@@ -5,10 +5,6 @@ VENV_PATH=/opt/kolla
 cd $VENV_PATH
 source $VENV_PATH/bin/activate
 
-# init the server (base only)
-kolla-ansible -i /mnt/config bootstrap-servers
-# ensure all the required bits and configuration are in place
-kolla-ansible -i /mnt/config prechecks
 # deploy cluster, e.g. controller and compute (monitor,storage,neutron)
 kolla-ansible -i /mnt/config deploy
 
@@ -16,7 +12,6 @@ kolla-ansible -i /mnt/config deploy
 pip install python-openstackclient
 # generates the ENV vars to /etc/kolla/admin-openrc.sh to be able to authenticate the openstack cli
 kolla-ansible post-deploy
-
 
 echo "provision demo networks and demo images once"
 cd /opt/kolla

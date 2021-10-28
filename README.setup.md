@@ -5,7 +5,7 @@ Default configuration for our lab setup
 ```
 vagrant ssh controller
 sudo -s
-docker exec -it ovn_controller bash -c 'ovs-vsctl set open . external-ids:ovn-cms-options="enable-chassis-as-gw"'
+docker exec -it neutron_server bash -c 'ovs-vsctl set open . external-ids:ovn-cms-options="enable-chassis-as-gw"'
 ```
 
 ```
@@ -25,6 +25,10 @@ openstack subnet create --network kwlan --subnet-range 10.10.0.0/24 --gateway 'a
 
 openstack router create lan2wan
 openstack router add subnet lan2wan kwlan-v4
+
+openstack router set --external-gateway provider-wan lan2wan
+
+openstack flavor create --disk 5 --vcpus 1 --ram 500 tiny
 ```
 
 ```
@@ -42,4 +46,8 @@ openstack image create \
 --public \
 --file cirros-0.5.2-x86_64-disk.img \
 cirros-0.5.2
+```
+
+```
+openstack server create --image cirros-0.5.2 --flavor tiny test --network kwlan
 ```

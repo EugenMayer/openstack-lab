@@ -1,4 +1,4 @@
 ---
 network_interface: 'eth1'
-#neutron_external_interface: 'eth2'
-#neutron_bridge_name: 'br-wan'
+neutron_external_interface: 'eth2'
+neutron_bridge_name: 'br-wan'

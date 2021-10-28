@@ -16,7 +16,8 @@ kolla-ansible post-deploy
 echo "provision demo networks and demo images once"
 cd /opt/kolla
 . /etc/kolla/admin-openrc.sh
-/opt/kolla/share/kolla-ansible/init-runonce
+# Rather ruse README.setup.md instead
+#/opt/kolla/share/kolla-ansible/init-runonce
 
 echo "You can now run the openstack cli by connecting to deploy and run"
 echo " - vagrant ssh deploy"

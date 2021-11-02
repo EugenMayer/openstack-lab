@@ -25,6 +25,9 @@ controller
 compute1
 compute2
 
+[glance]
+backups
+
 ############# NO CHANGES BELOW THIS LINE ###############
 
 [deployment]

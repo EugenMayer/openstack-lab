@@ -121,7 +121,7 @@ Vagrant.configure("2") do |config|
     box.vm.provision "shell", path: "deploy/1_prepare_os.sh"
     box.vm.provision "shell", path: "deploy/2_install_kolla.sh"
     box.vm.provision "shell", path: "deploy/3_configure_kolla.sh"
-    box.vm.provision "shell", path: "deploy/4_verify.sh"
-    box.vm.provision "shell", path: "deploy/5_openstack_install.sh"
+    #box.vm.provision "shell", path: "deploy/4_verify.sh"
+    #box.vm.provision "shell", path: "deploy/5_openstack_install.sh"
   end
 end

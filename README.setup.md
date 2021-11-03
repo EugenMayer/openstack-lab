@@ -2,13 +2,13 @@
 
 Default configuration for our lab setup
 
-```
+```bash
 vagrant ssh controller
 sudo -s
 docker exec -it neutron_server bash -c 'ovs-vsctl set open . external-ids:ovn-cms-options="enable-chassis-as-gw"'
 ```
 
-```
+```bash
 vagrant ssh deploy
 sudo -s
 
@@ -16,22 +16,36 @@ source /opt/kolla/bin/activate
 source /etc/kolla/admin-openrc.sh
 ```
 
-```
+```bash
 openstack network create --external --share --provider-physical-network physnet1 --provider-network-type flat provider-wan
 openstack subnet create --network provider-wan --subnet-range 203.0.113.0/24 --allocation-pool start=203.0.113.2,end=203.0.113.100 --dns-nameserver 1.1.1.1 --gateway 203.0.113.1 provider-wan-v4
 
 openstack network create kwlan --internal --share
-openstack subnet create --network kwlan --subnet-range 10.10.0.0/24 --gateway 'auto' --dns-nameserver 1.1.1.1 kwlan-v4
+openstack subnet create --network kwlan \
+    --subnet-range 10.10.0.0/29 \
+    --allocation-pool start=10.10.0.2,end=10.10.0.6 \
+    --gateway 'auto' \
+    --dns-nameserver 1.1.1.1 \
+    kwlan-service
+openstack subnet create --network kwlan \
+    --subnet-range 10.10.0.128/25 \
+    --allocation-pool start=10.10.0.130,end=10.10.0.253 \
+    --gateway 'auto' \
+    --dns-nameserver 10.10.0.3 \
+    --dns-nameserver 1.1.1.1 \
+    kwlan-instances
+# Routers
+openstack router create kwlan
 
-openstack router create lan2wan
-openstack router add subnet lan2wan kwlan-v4
-
-openstack router set --external-gateway provider-wan lan2wan
+# add both networks so instances can talk to each other from both subnets
+openstack router add subnet kwlan kwlan-service
+openstack router add subnet kwlan kwlan-instances
+openstack router set --external-gateway provider-wan kwlan
 
 openstack flavor create --disk 5 --vcpus 1 --ram 500 tiny
 ```
 
-```
+```bash
 wget http://download.cirros-cloud.net/0.5.2/cirros-0.5.2-x86_64-disk.img
 
 openstack image create \
@@ -48,6 +62,6 @@ openstack image create \
 cirros-0.5.2
 ```
 
-```
+```bash
 openstack server create --image cirros-0.5.2 --flavor tiny test --network kwlan
 ```

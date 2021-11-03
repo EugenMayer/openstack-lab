@@ -25,9 +25,6 @@ controller
 compute1
 compute2
 
-[glance]
-backups
-
 ############# NO CHANGES BELOW THIS LINE ###############
 
 [deployment]
@@ -119,6 +116,9 @@ monitoring
 monitoring
 
 [keystone:children]
+control
+
+[glance:children]
 control
 
 [glance:children]

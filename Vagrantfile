@@ -10,8 +10,6 @@ computeNodes = {
   'compute1' => {'hostname' => 'compute1',  "ip_management" => "172.27.240.3", "ip_wan" => "203.0.113.3"},
   'compute2' => {'hostname' => 'compute2', "ip_management" => "172.27.240.4", "ip_wan" => "203.0.113.4"}
 }
-backups = { 'hostname' => 'backups', 'ip_management' => '172.27.240.10' }
-
 
 Vagrant.configure("2") do |config|
   # get our pre-generated ssh keys
@@ -96,26 +94,6 @@ Vagrant.configure("2") do |config|
     end
   end
 
-
-  config.vm.define :backups do |box|
-    box.vm.provider :virtualbox do |vb|
-      vb.memory = 1000
-      vb.cpus = 1
-    end
-    box.vm.host_name = backups['hostname']
-
-    # deploy is only in the management network
-    box.vm.network 'private_network', ip: backups['ip_management'], hostname: true
-    box.vm.provision 'shell', inline: <<-SCRIPT
-      sudo mkdir -p /root/.ssh
-      sudo chmod u=rwx,g=,o= /root/.ssh
-      sudo echo '#{public_key}' >> /root/.ssh/authorized_keys
-      sudo chmod -R 600 /root/.ssh/authorized_keys
-    SCRIPT
-    box.vm.provision 'shell', path: 'backups/1_prepare_os.sh'
-  end
-
-
   # this is the node we deploy the entire cluster from
   config.vm.define :deploy do |box|
     box.vm.provider :virtualbox do |vb|
@@ -143,7 +121,7 @@ Vagrant.configure("2") do |config|
     box.vm.provision "shell", path: "deploy/1_prepare_os.sh"
     box.vm.provision "shell", path: "deploy/2_install_kolla.sh"
     box.vm.provision "shell", path: "deploy/3_configure_kolla.sh"
-    #box.vm.provision "shell", path: "deploy/4_verify.sh"
-    #box.vm.provision "shell", path: "deploy/5_openstack_install.sh"
+    box.vm.provision "shell", path: "deploy/4_verify.sh"
+    box.vm.provision "shell", path: "deploy/5_openstack_install.sh"
   end
 end

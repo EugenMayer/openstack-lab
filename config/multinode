@@ -121,9 +121,6 @@ control
 [glance:children]
 control
 
-[glance:children]
-control
-
 [nova:children]
 control
 

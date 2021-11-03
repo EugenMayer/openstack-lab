@@ -58,11 +58,10 @@ kolla_enable_tls_external: "false"
 # Disable cinder, we do not require it. We use local storages on the compute nodes
 enable_cinder: "no"
 
-enable_freezer: "yes"
-enable_horizon_freezer: "yes"
-
 # HACK/NO PRODUCTION: use qemu since for nested vritualization under virtualbox., kvm does kernel panic on guest instances
 nova_compute_virt_type: qemu
+
+glance_file_datadir_volume: /mnt
 ''' > /etc/kolla/globals.yml
 
 # generate passwords, including our admin password

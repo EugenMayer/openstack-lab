@@ -6,12 +6,14 @@ cd $VENV_PATH
 source $VENV_PATH/bin/activate
 
 # deploy cluster, e.g. controller and compute (monitor,storage,neutron)
-kolla-ansible -i /mnt/config deploy
+kolla-ansible -i /mnt/config/inventory deploy
 
 # create openrc and install client
 pip install python-openstackclient
+pip install python-glanceclient
+
 # generates the ENV vars to /etc/kolla/admin-openrc.sh to be able to authenticate the openstack cli
-kolla-ansible post-deploy
+kolla-ansible -i /mnt/config/inventory post-deploy
 
 echo "provision demo networks and demo images once"
 cd /opt/kolla
@@ -19,9 +21,4 @@ cd /opt/kolla
 # Rather ruse README.setup.md instead
 #/opt/kolla/share/kolla-ansible/init-runonce
 
-echo "You can now run the openstack cli by connecting to deploy and run"
-echo " - vagrant ssh deploy"
-echo " - sudo -s"
-echo " - source /opt/kolla/bin/activate"
-echo " - . /etc/kolla/admin-openrc.sh"
-echo " - openstack .."
+echo "If you like, run /mnt/config/bin/setup_defaults.sh to setup the defaults for convinient testing'

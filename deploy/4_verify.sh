@@ -12,9 +12,9 @@ source $VENV_PATH/bin/activate
 ssh-keyscan controller compute1 compute2 >> /root/.ssh/known_hosts
 
 # test connectivity to hosts
-ansible -i /mnt/config/ all -m ping
+ansible -i /mnt/config//inventory all -m ping
 
 # init the server (base only)
-kolla-ansible -i /mnt/config bootstrap-servers
+kolla-ansible -i /mnt/config/inventory bootstrap-servers
 # ensure all the required bits and configuration are in place
-kolla-ansible -i /mnt/config prechecks
+kolla-ansible -i /mnt/config/inventory prechecks

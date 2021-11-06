@@ -12,7 +12,7 @@ Status:
 
 - openstack: Xena
 - Debian: 11 (bullseye) (controller and nodes)
-- Neutron type: OVN
+- Neutron type: OVN non DVR
 
 ## Requirements
 
@@ -90,7 +90,7 @@ The base `multinode` is in `/multinode_original` which is based on `master` comm
 
 **Compute 1/2 have 3 networks:**
 
-We have no WAN interface here, since we are not using [DVR](https://docs.openstack.org/networking-ovn/latest/admin/refarch/refarch.html#distributed-floating-ips-dvr) in this setup
+We have no WAN interface here, since we are NOT using [DVR](https://docs.openstack.org/networking-ovn/latest/admin/refarch/refarch.html#distributed-floating-ips-dvr) in this setup
 
 1. `eth1` as `mngmnt` (172.27.240.3/172.27.240.4)
 

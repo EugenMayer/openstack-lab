@@ -42,10 +42,6 @@ Vagrant.configure("2") do |config|
       # Provider network: wan/floating ip
       # box.vm.network "private_network", ip: computeNodes[key]['ip_wan'], virtualbox__intnet: true
 
-
-      # we need some space for our VG/PV
-      box.vm.disk :disk, size: "20GB", name: "lvm-disk"
-
       box.vm.provider :virtualbox do |vb|
         vb.memory = 3048
         vb.cpus = 2
@@ -62,7 +58,6 @@ Vagrant.configure("2") do |config|
         SCRIPT
 
       box.vm.provision "shell", path: "compute/1_prepare_os.sh"
-      box.vm.provision "shell", path: "compute/2_setup_lvm.sh"
     end
   end
 

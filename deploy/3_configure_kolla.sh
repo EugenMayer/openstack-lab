@@ -14,6 +14,7 @@ cp $VENV_PATH/share/kolla-ansible/ansible/inventory/* .
 sudo mkdir -p /etc/kolla/globals.d/
 
 # add our global config
+rm -fr  /etc/kolla/globals.yml
 ln -s /mnt/config/kolla/globals.yml /etc/kolla/globals.yml
 
 # generate passwords, including our admin password

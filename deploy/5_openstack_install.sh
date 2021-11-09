@@ -15,10 +15,14 @@ pip install python-glanceclient
 # generates the ENV vars to /etc/kolla/admin-openrc.sh to be able to authenticate the openstack cli
 kolla-ansible -i /mnt/config/inventory post-deploy
 
-echo "provision demo networks and demo images once"
 cd /opt/kolla
 . /etc/kolla/admin-openrc.sh
 # Rather ruse README.setup.md instead
 #/opt/kolla/share/kolla-ansible/init-runonce
 
-echo "If you like, run /mnt/config/bin/setup_defaults.sh to setup the defaults for convinient testing'
+echo "If you like, run /mnt/config/bin/setup_defaults.sh to setup the defaults for convinient testing"
+source /etc/kolla/admin-openrc.sh
+
+echo "Creating application toke you can use for your cli or terraform. The secret is 'very_very_secret_key'"
+openstack application credential create --role admin --description terraform --secret very_very_secret_key -f value -c id terraform
+echo "Note down the above client-id to use with your token secret 'very_very_secret_key'"

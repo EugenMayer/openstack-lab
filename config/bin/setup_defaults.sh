@@ -50,3 +50,8 @@ openstack image create \
 cirros-0.5.2
 
 openstack server create --image cirros-0.5.2 --flavor tiny test --network kwlan
+
+echo "Remove default ingress rules from default group"
+openstack security group rule delete $(openstack security group rule list $(openstack security group show default -c id -f value) --ingress -c ID -f value)
+
+

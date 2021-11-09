@@ -41,8 +41,7 @@ kolla_enable_tls_external: 'false'
 # Disable cinder, we do not require it. We use local storages on the compute nodes
 enable_cinder: 'no'
 
-# HACK/NO PRODUCTION: use qemu since for nested vritualization under virtualbox., kvm does kernel panic on guest instances
-nova_compute_virt_type: qemu
+node_custom_config: '/mnt/config/kolla/config-override'
 
 glance_file_datadir_volume: /mnt
 
@@ -51,3 +50,6 @@ glance_file_datadir_volume: /mnt
 nove_console: nonvc
 # also // additionally enable serial console
 enable_nova_serialconsole_proxy: true
+
+# HACK/NO PRODUCTION: use qemu since for nested vritualization under virtualbox., kvm does kernel panic on guest instances
+nova_compute_virt_type: qemu

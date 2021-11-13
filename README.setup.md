@@ -18,5 +18,5 @@ If you want to finish the setup you need to make the controller the chassis, do 
 ```bash
 vagrant ssh controller
 sudo -s
-docker exec -it neutron_server bash -c 'ovs-vsctl set open . external-ids:ovn-cms-options="enable-chassis-as-gw"'
+docker exec -it openvswitch_vswitchd bash -c 'ovs-vsctl set open . external-ids:ovn-cms-options="enable-chassis-as-gw"'
 ```

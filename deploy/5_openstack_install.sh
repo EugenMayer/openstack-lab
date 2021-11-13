@@ -20,9 +20,13 @@ cd /opt/kolla
 # Rather ruse README.setup.md instead
 #/opt/kolla/share/kolla-ansible/init-runonce
 
+echo "making controller a chassis"
+ssh controller -- docker exec openvswitch_vswitchd ovs-vsctl set open . external-ids:ovn-cms-options="enable-chassis-as-gw"
+
 echo "If you like, run /mnt/config/bin/setup_defaults.sh to setup the defaults for convinient testing"
 source /etc/kolla/admin-openrc.sh
 
 echo "Creating application toke you can use for your cli or terraform. The secret is 'very_very_secret_key'"
 openstack application credential create --role admin --description terraform --secret very_very_secret_key -f value -c id terraform
 echo "Note down the above client-id to use with your token secret 'very_very_secret_key'"
+

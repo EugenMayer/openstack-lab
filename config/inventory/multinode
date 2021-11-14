@@ -2,28 +2,29 @@
 # additional groups are for more control of the environment.
 [control]
 # These hostname must be resolvable from your deployment host
-controller
-
-# The network nodes are where your l3-agent and loadbalancers will run
-# This can be the same as a host in the control group
-[network]
-controller
+controller1
 
 [compute]
 compute1
 compute2
 
-[monitoring]
-controller
+# The network nodes are where your l3-agent and loadbalancers will run
+# This can be the same as a host in the control group
+[network:children]
+control
+
+
+
+[monitoring:children]
+control
 
 # When compute nodes and control nodes use different interfaces,
 # you need to comment out "api_interface" and other interfaces from the globals.yml
 # and specify like below:
 #compute01 neutron_external_interface=eth0 api_interface=em1 storage_interface=em1 tunnel_interface=em1
 
-[storage]
-compute1
-compute2
+[storage:children]
+compute
 
 ############# NO CHANGES BELOW THIS LINE ###############
 

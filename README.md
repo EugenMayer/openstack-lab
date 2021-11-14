@@ -44,8 +44,8 @@ The credentials are
 ### Connect to boxes via ssh
 
 ```bash
-vagrant ssh deploy
-vagrant ssh controller
+vagrant ssh deployer
+vagrant ssh controller1
 vagrant ssh compute1
 vagrant ssh compute2
 ```
@@ -103,7 +103,7 @@ We have no WAN interface here, since we are NOT using [DVR](https://docs.opensta
 You can now run the openstack cli by connecting to deploy and run:
 
 ```bash
-$ vagrant ssh deploy
+$ vagrant ssh deployer
 $ sudo -s
 $ source /opt/kolla/bin/activate
 $ . /etc/kolla/admin-openrc.sh

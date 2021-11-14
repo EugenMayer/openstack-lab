@@ -1,9 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-deploy = { 'hostname' => 'deploy', 'ip_management' => '172.27.240.240' }
+deploy = { 'hostname' => 'deployer', 'ip_management' => '172.27.240.240' }
 controllerNodes = {
-  'compute1' => { 'hostname' => 'controller', 'ip_management' => '172.27.240.2', 'ip_wan' => '203.0.113.3' }
+  'controller1' => { 'hostname' => 'controller1', 'ip_management' => '172.27.240.243', 'ip_wan' => '203.0.113.3' }
 }
 
 computeNodes = {
@@ -97,7 +97,7 @@ Vagrant.configure('2') do |config|
 
     # deploy is only in the management network
     box.vm.network 'private_network', ip: deploy['ip_management'], hostname: true # , virtualbox__intnet: true
-    #box.vm.network 'private_network', ip: '203.0.113.4' # , virtualbox__intnet: true
+    # box.vm.network 'private_network', ip: '203.0.113.4' # , virtualbox__intnet: true
 
     config.vm.synced_folder 'config/', '/mnt/config'
 
@@ -116,6 +116,6 @@ Vagrant.configure('2') do |config|
     box.vm.provision 'shell', path: 'deploy/2_install_kolla.sh'
     box.vm.provision 'shell', path: 'deploy/3_configure_kolla.sh'
     box.vm.provision 'shell', path: 'deploy/4_verify.sh'
-    # box.vm.provision 'shell', path: 'deploy/5_openstack_install.sh'
+    box.vm.provision 'shell', path: 'deploy/5_openstack_install.sh'
   end
 end

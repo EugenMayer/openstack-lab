@@ -21,7 +21,7 @@ cd /opt/kolla
 #/opt/kolla/share/kolla-ansible/init-runonce
 
 echo "making controller a chassis"
-ssh controller -- docker exec openvswitch_vswitchd ovs-vsctl set open . external-ids:ovn-cms-options="enable-chassis-as-gw"
+ssh controller1 -- docker exec openvswitch_vswitchd ovs-vsctl set open . external-ids:ovn-cms-options="enable-chassis-as-gw"
 
 echo "If you like, run /mnt/config/bin/setup_defaults.sh to setup the defaults for convinient testing"
 source /etc/kolla/admin-openrc.sh

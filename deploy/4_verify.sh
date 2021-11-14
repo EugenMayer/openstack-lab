@@ -9,10 +9,10 @@ python3 -m venv $VENV_PATH
 source $VENV_PATH/bin/activate
 
 # make sure we pre-fill the known hosts
-ssh-keyscan controller compute1 compute2 >> /root/.ssh/known_hosts
+ssh-keyscan controller1 compute1 compute2 >> /root/.ssh/known_hosts
 
 # test connectivity to hosts
-ansible -i /mnt/config//inventory all -m ping
+ansible -i /mnt/config/inventory all -m ping
 
 # init the server (base only)
 kolla-ansible -i /mnt/config/inventory bootstrap-servers

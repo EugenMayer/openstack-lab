@@ -31,7 +31,7 @@ neutron_plugin_agent: 'ovn'
 # see https://docs.oracle.com/cd/E96260_01/E96263/html/kolla-endpoints.html
 # All compute nodes / controller must be in the same network, while this IP must yet not be assigned to any
 # any of those
-kolla_internal_vip_address: '172.27.240.250'
+kolla_internal_vip_address: '172.27.240.2' # while controller also has 172.27.240.243 in addition by default
 kolla_enable_tls_external: 'false'
 
 #kolla_internal_fqdn=controller.lan

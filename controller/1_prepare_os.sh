@@ -11,7 +11,7 @@ apt-get install -y curl
 # docker helper tools
 echo '''#!/bin/bash
 set -e
-docker exec ovn_controller ovn-trace $@
+docker exec ovn_sb_db ovn-trace $@
 ''' > /usr/local/bin/ovn-trace
 
 echo '''#!/bin/bash

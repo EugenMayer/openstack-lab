@@ -13,8 +13,6 @@ compute2
 [network:children]
 control
 
-
-
 [monitoring:children]
 control
 

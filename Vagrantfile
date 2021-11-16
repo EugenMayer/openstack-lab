@@ -88,6 +88,7 @@ Vagrant.configure('2') do |config|
   end
 
   # this is the node we deploy the entire cluster from
+  # TODO: rename to deployer
   config.vm.define :deploy do |box|
     box.vm.provider :virtualbox do |vb|
       vb.memory = 1000
@@ -97,7 +98,7 @@ Vagrant.configure('2') do |config|
 
     # deploy is only in the management network
     box.vm.network 'private_network', ip: deploy['ip_management'], hostname: true # , virtualbox__intnet: true
-    # box.vm.network 'private_network', ip: '203.0.113.4' # , virtualbox__intnet: true
+    box.vm.network 'private_network', ip: '203.0.113.4' # , virtualbox__intnet: true
 
     config.vm.synced_folder 'config/', '/mnt/config'
 
